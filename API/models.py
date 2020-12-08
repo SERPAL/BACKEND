@@ -25,6 +25,7 @@ class Book(models.Model):
     date = models.DateTimeField(max_length = 255, verbose_name=("Date"),auto_now = True)
     author2 = models.CharField(max_length = 255, verbose_name=("Author 2"))
     description = models.TextField(verbose_name=("Description"))
+    book_text = models.TextField(verbose_name=("Book Text"))
 
     class Meta:
         verbose_name = "Book"     

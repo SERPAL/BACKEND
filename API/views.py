@@ -4,16 +4,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Book
 from rest_framework import viewsets
-from .serializer import BookSerializer
+from .serializer import BookSerializer, ProfileSerializer, UserProfileSerializer
 from rest_framework.decorators import api_view
+from django.contrib.auth.models import User
 # Create your views here.
 
-
-class TestView(APIView):
-    permission_classes = (AllowAny,)
-    def get(self, request):
-        content = {'message':'Hello Waleed'}
-        return Response(content)
 
 
 @api_view(['GET'])
@@ -30,7 +25,9 @@ def book_details(request, pk):
 
 @api_view(['PUT'])
 def edit_user(request,pk):
-    pass
+    user = User.objects.get(pk=pk)
+    serializer = UserProfileSerializer(user, many=False)
+    return Response(serializer.data)
 
 
 

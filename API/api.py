@@ -1,12 +1,17 @@
-from rest_framework import generics, permissions,mixins
+from rest_framework import generics, permissions,mixins, status
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from .models import Profile
-from .serializer import RegisterSerializer, UserProfileSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from .serializer import RegisterSerializer, UserProfileSerializer, UpdateUserSerializer
 from rest_framework.serializers import ValidationError
 import json
 from django.shortcuts import HttpResponse
 from django.http import JsonResponse
+
+
+
 #Register API
 #Using generics views
 class RegisterAPI(generics.GenericAPIView):
@@ -28,14 +33,14 @@ class RegisterAPI(generics.GenericAPIView):
             return Response({"error": e.get_full_details()})
 
 
-#Retrieve list of books
-# class BookAPI(generics.ListAPIView):
-#     serializer_class = BookList
-#     def get(self, request):
-#         try:
-#             serializer = self.get_serializer() 
-#             return Response({
-#                 "book":BookSerializer(serializer)
-#                 })
-#         except Exception as e:
-#             print("The error is in the BookAPI => ", e)
+#Update user 
+class UpdateUserAPI(generics.RetrieveUpdateAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = UpdateUserSerializer
+    lookup_field = 'pk'
+    def get_object(self):
+        pk = self.kwargs["pk"]
+        return get_object_or_404(User, pk=pk)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)

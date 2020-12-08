@@ -16,6 +16,38 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    confirm_password = serializers.CharField(write_only=True)
+    class Meta:
+        model = User
+        fields = ( "first_name","last_name","username","password","confirm_password")
+        extra_kwargs = {
+            'password':{"write_only":True},
+            'confirm_password':{"write_only":True},
+        }
+
+    def validate_password(self, value):
+        data = self.get_initial()
+        confirm_password = data.pop('confirm_password')
+        password = data.get('password')
+        if password != confirm_password:
+            raise serializers.ValidationError('Passwords must match')
+        if password is None and confirm_password is None:
+            raise serializers.ValidationError('Passwords are not filled')
+        else:
+            return value
+
+    def update(self, instance ,validated_data):
+        print("instance => ", instance)
+        instance.first_name = validated_data.get("first_name")
+        instance.last_name = validated_data.get("last_name")
+        password = validated_data.get("password")
+        instance.set_password(password)
+        instance.save()
+        return instance
+
+    
 class RegisterSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
     email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
@@ -31,18 +63,12 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
         data = self.get_initial()
         confirm_password = data.pop('confirm_password')
-        print("In the validation!")
         password = data.get('password')
-        print("password => ", password)
-        print("confirm_passowrd => ", confirm_password)
         if password != confirm_password:
-            print("First error")
             raise serializers.ValidationError('Passwords must match')
         if password is None and confirm_password is None:
-            print("Second error")
             raise serializers.ValidationError('Passwords are not filled')
         else:
-            print("No error")
             return value
         
 
@@ -60,12 +86,10 @@ class RegisterSerializer(serializers.ModelSerializer):
             print("The error is in Register Serilazer create =>", e)
             return Response({"error": {{k:v} for k,v in e.items()}})
 
-
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = "__all__"
-
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
