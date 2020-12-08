@@ -1,15 +1,12 @@
 
 from django.db import models
 from django.core.validators import validate_image_file_extension
+from django.contrib.auth.models import User
 
-
-class User(models.Model):
-    name = models.CharField(max_length = 255, verbose_name=("Name"))
-    surename = models.CharField(max_length = 255, verbose_name=("Sure Name"))
-    password = models.CharField(max_length = 255, verbose_name=("Password"))
-    email = models.CharField(max_length = 255, verbose_name=("Email"))
-    image = models.ImageField(verbose_name = 'Image', upload_to='media/', 
-    validators=[validate_image_file_extension])
+class Profile(models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'user')
+    avatar = models.ImageField(verbose_name = 'Image', upload_to='media/', 
+    validators=[validate_image_file_extension], blank=True, null = True)
 
     class Meta:
         verbose_name = "User"     
@@ -96,7 +93,15 @@ class Messages(models.Model):
     class Meta:
         verbose_name = "Message"     
         verbose_name_plural = "Message"
-        db_table = "Message"
+        db_table = "message"
 
     def __str__(self):
         return self.message
+
+
+
+"""
+Model to return word translation
+"""
+class Translation(models.Model):
+    books = models.ManyToManyField(Book, verbose_name="Books")
