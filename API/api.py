@@ -10,10 +10,8 @@ from django.http import JsonResponse
 #Register API
 #Using generics views
 class RegisterAPI(generics.GenericAPIView):
-    print("1")
     #Adding the serialized class for registeration
     serializer_class = RegisterSerializer
-    print("2")
     #Overriding the method to make our own registeration
     def post(self, request, *args, **kwargs):
         try:
@@ -29,3 +27,15 @@ class RegisterAPI(generics.GenericAPIView):
             print("Fuul details => ", type(e.get_full_details()))
             return Response({"error": e.get_full_details()})
 
+
+#Retrieve list of books
+# class BookAPI(generics.ListAPIView):
+#     serializer_class = BookList
+#     def get(self, request):
+#         try:
+#             serializer = self.get_serializer() 
+#             return Response({
+#                 "book":BookSerializer(serializer)
+#                 })
+#         except Exception as e:
+#             print("The error is in the BookAPI => ", e)

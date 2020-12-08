@@ -9,12 +9,12 @@ class Profile(models.Model):
     validators=[validate_image_file_extension], blank=True, null = True)
 
     class Meta:
-        verbose_name = "User"     
-        verbose_name_plural = "Users"
-        db_table = "users"
+        verbose_name = "Profile"     
+        verbose_name_plural = "Profiles"
+        db_table = "profiles"
 
     def __str__(self):
-        return self.name
+        return self.user.get_full_name()
 
 
 
@@ -25,7 +25,6 @@ class Book(models.Model):
     date = models.DateTimeField(max_length = 255, verbose_name=("Date"),auto_now = True)
     author2 = models.CharField(max_length = 255, verbose_name=("Author 2"))
     description = models.TextField(verbose_name=("Description"))
-
 
     class Meta:
         verbose_name = "Book"     
@@ -42,7 +41,6 @@ class Comment(models.Model):
     content = models.TextField(verbose_name=("Content"))
     date = models.DateTimeField(max_length = 255, verbose_name=("Date"), auto_now = True)
 
-
     class Meta:
         verbose_name = "Comment"     
         verbose_name_plural = "Comments"
@@ -56,7 +54,6 @@ class Rating(models.Model):
     user = models.ForeignKey(User, verbose_name = "User", on_delete = models.CASCADE)
     book = models.ForeignKey(Book,verbose_name = "Book", on_delete = models.CASCADE)
     rate = models.IntegerField(verbose_name="Rate")
-
 
     class Meta:
         verbose_name = "Rating"     
@@ -72,7 +69,6 @@ class Reviews(models.Model):
     book = models.ForeignKey(Book,verbose_name = "Book", on_delete = models.CASCADE)
     content = models.TextField(verbose_name=("Content"))
     date = models.DateTimeField(max_length = 255, verbose_name=("Date"), auto_now = True)
-
 
     class Meta:
         verbose_name = "Review"     

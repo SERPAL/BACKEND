@@ -1,13 +1,14 @@
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.db import models
-from .models import Profile
+from .models import Profile, Book
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.validators import UniqueValidator
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -58,3 +59,16 @@ class RegisterSerializer(serializers.ModelSerializer):
         except Exception as e:
             print("The error is in Register Serilazer create =>", e)
             return Response({"error": {{k:v} for k,v in e.items()}})
+
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = "__all__"
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = "__all__"
+
