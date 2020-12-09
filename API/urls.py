@@ -8,6 +8,7 @@ namesapce = 'api'
 
 
 urlpatterns = [
+    path('users/', views.users_list, name="users"),
     path('register/', RegisterAPI.as_view(),name="register"),
     path('books/',views.book_list,name="books"),
     path('book/<int:pk>/', views.book_details, name="book_details"),

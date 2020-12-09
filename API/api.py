@@ -38,6 +38,7 @@ class UpdateUserAPI(generics.RetrieveUpdateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = UpdateUserSerializer
     lookup_field = 'pk'
+    
     def get_object(self):
         pk = self.kwargs["pk"]
         return get_object_or_404(User, pk=pk)

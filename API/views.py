@@ -12,6 +12,13 @@ from django.contrib.auth.models import User
 
 
 @api_view(['GET'])
+def users_list(request):
+    users = User.objects.all()
+    serializer = UserProfileSerializer(users, many = True)
+    return Response( serializer.data)
+
+
+@api_view(['GET'])
 def book_list(request):
     books = Book.objects.all().order_by('-name')
     serializer = BookSerializer(books, many=True)
